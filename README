@@ -1,8 +1,8 @@
-Some monkey patches to get this old legacy project code somewhat working on latest Haxe 3.4 (or 3.3) /OpenFL/Lime/etc, and also with the latest git dev version of Haxepunk (>=4.0).
+Some monkey patches to get this old legacy project code (literally half a decade old!) somewhat working on latest Haxe 3.4 (or 3.3) /OpenFL/Lime/etc, and also with the latest git dev version of Haxepunk (>=4.0).
 
 Should be working on all platforms except Flash. (Haxepunk dropped support for Flash from version >=4).
 
-Haxepunk GUI is outdated and not compatible with the latest Haxepunk 4, and HaxePunk 4 no longer supports Canvas class, so, some of the UIs and visuals would been left out due to outdated incompatible code. I just needed this project to run, that's all.
+Some things to take note. Haxepunk GUI is outdated and not compatible with the latest Haxepunk 4, and HaxePunk 4 no longer supports Canvas class, so, some of the UIs and visual bells would been left out due to outdated incompatible code. I just needed this project to at least run, that's all. 
 
 `haxelib git HaxePunk https://github.com/HaxePunk/HaxePunk.git dev`
 
