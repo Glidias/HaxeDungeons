@@ -1,4 +1,4 @@
-Some monkey patches to get this old legacy project code (literally half a decade old!) somewhat working on latest Haxe 3.4 (or 3.3) /OpenFL/Lime/etc, and also with the latest git dev version of Haxepunk (>=4.0).
+Some monkey patches to get this old legacy project code (literally half a decade old!) somewhat working on latest Haxe 3.4 /OpenFL/Lime/etc, and also with the latest git dev version of Haxepunk (>=4.0).
 
 Should be working on all platforms except Flash. (Haxepunk dropped support for Flash from version >=4).
 
