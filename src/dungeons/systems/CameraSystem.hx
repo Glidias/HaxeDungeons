@@ -51,7 +51,7 @@ class CameraSystem extends ListIteratingSystem<CameraFocusNode>
         if (cameraMotion == null)
         {
             cameraMotion = new LinearMotion();
-            HXP.scene.addTween(cameraMotion);
+            HXP.scene.addTween(cameraMotion, true);
         }
         cameraMotion.setMotion(HXP.camera.x, HXP.camera.y, focus.position.x * tileSize - HXP.halfWidth, focus.position.y * tileSize - HXP.halfHeight, 0.25);
     }

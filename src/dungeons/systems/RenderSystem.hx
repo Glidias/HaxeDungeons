@@ -373,7 +373,7 @@ private class RenderableEntity extends haxepunk.Entity
             alphaTween = new NumTween(); //onAlphaTweenComplete
 			alphaTween.onComplete.bind(onAlphaTweenComplete);
             alphaTween.value = 0;
-            addTween(alphaTween);
+            addTween(alphaTween, true);
         }
     }
 
@@ -453,7 +453,7 @@ private class FloatingText extends haxepunk.Entity
         tween.setMotion(origX, origY, targetX, targetY, 0.5);
        // tween.addEventListener(TweenEvent.FINISH, onTweenComplete);
 	   tween.onComplete.bind(onTweenComplete);
-        addTween(tween);
+        addTween(tween, true);
     }
 
     private function onTweenComplete():Void
@@ -503,16 +503,18 @@ private class SlashAnimation extends haxepunk.Entity
         this.scheduler = scheduler;
         scheduler.lock();
 
-        tween.tween(1, 0, 0.25);
+        
 		tween.onComplete.bind(onTweenComplete);
+		tween.tween(1, 0, 0.25);
        // tween.addEventListener(TweenEvent.FINISH, onTweenComplete);
-        addTween(tween);
+        addTween(tween, true);
     }
 
     private function onTweenComplete():Void
     {
         scheduler.unlock();
         scheduler = null;
+		
 		tween.onComplete.remove(onTweenComplete);
        // tween.removeEventListener(TweenEvent.FINISH, onTweenComplete);
         removeTween(tween);
@@ -555,7 +557,7 @@ private class HealthBar //extends Canvas  // This is no longer working because C
         //active = true;
         tween = new NumTween();
         tween.value = health.currentHP / health.maxHP;
-        HXP.scene.addTween(tween);
+        HXP.scene.addTween(tween, true);
 
         redraw();
     }
