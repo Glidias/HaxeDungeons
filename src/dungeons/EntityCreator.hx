@@ -7,7 +7,7 @@ import ash.core.Entity;
 
 import openfl.Assets;
 
-import com.haxepunk.HXP;
+import haxepunk.HXP;
 
 import dungeons.components.Item;
 import dungeons.components.Equipment;
@@ -72,7 +72,7 @@ class EntityCreator
         var gold:Entity = new Entity();
         gold.add(new Item("gold", true, quantity));
         gold.add(new Position());
-        gold.add(new Renderable("gold" + (1 + HXP.rand(15))));
+        gold.add(new Renderable("gold" + (1 + haxepunk.math.Random.randInt(15))));
         gold.add(new Description("Gold"));
         engine.addEntity(gold);
         return gold;
@@ -111,10 +111,10 @@ class EntityCreator
     {
         var remains:Entity = new Entity();
         remains.add(new Position());
-        if (HXP.random < 0.5)
-            remains.add(new Renderable("blood" + HXP.rand(15)));
+        if (haxepunk.math.Random.random < 0.5)
+            remains.add(new Renderable("blood" + haxepunk.math.Random.randInt(15)));
         else
-            remains.add(new Renderable("bones" + HXP.rand(9)));
+            remains.add(new Renderable("bones" + haxepunk.math.Random.randInt(9)));
         engine.addEntity(remains);
         return remains;
     }

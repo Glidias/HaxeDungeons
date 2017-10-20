@@ -2,22 +2,24 @@ package dungeons.systems;
 
 import flash.geom.Rectangle;
 import flash.display.BitmapData;
-
-import com.haxepunk.tweens.misc.NumTween;
-import com.haxepunk.tweens.motion.LinearMotion;
-import com.haxepunk.tweens.TweenEvent;
-import com.haxepunk.graphics.Tilemap;
-import com.haxepunk.graphics.Graphiclist;
-import com.haxepunk.graphics.Canvas;
-import com.haxepunk.graphics.Image;
-import com.haxepunk.graphics.Spritemap;
-import com.haxepunk.graphics.Text;
-import com.haxepunk.HXP;
-import com.haxepunk.Graphic;
-import com.haxepunk.Scene;
-
+import haxepunk.graphics.atlas.AtlasData;
+import haxepunk.graphics.atlas.TileAtlas;
+import haxepunk.graphics.hardware.Texture;
 import com.haxepunk.gui.Label;
-import com.haxepunk.gui.Panel;
+import haxepunk.math.Random;
+
+import haxepunk.tweens.misc.NumTween;
+import haxepunk.tweens.motion.LinearMotion;
+import haxepunk.graphics.tile.Tilemap;
+import haxepunk.graphics.Graphiclist;
+//import haxepunk.graphics.Canvas;
+import haxepunk.graphics.Image;
+import haxepunk.graphics.Spritemap;
+import haxepunk.graphics.text.Text;
+import haxepunk.HXP;
+import haxepunk.Graphic;
+import haxepunk.Scene;
+
 
 import ash.core.Engine;
 import ash.core.NodeList;
@@ -54,10 +56,10 @@ class RenderSystem extends System
     private var fovSystem:FOVSystem;
     private var fovOverlayData:BitmapData;
     private var fovOverlayImage:Image;
-    private var fovOverlayEntity:com.haxepunk.Entity;
+    private var fovOverlayEntity:haxepunk.Entity;
     private var fovOverlayDirty:Bool;
 
-    private var memoryCanvas:Canvas;
+   // private var memoryCanvas:Canvas;
 
     private var playerInventory:PlayerInventory;
 
@@ -95,25 +97,25 @@ class RenderSystem extends System
 
         fovOverlayData = new BitmapData(map.width, map.height, true, 0xFF000000);
 
-        fovOverlayImage = new Image(fovOverlayData);
+		fovOverlayImage = new Image(new Texture(fovOverlayData));
         fovOverlayImage.scale = assetFactory.tileSize;
         fovOverlayEntity = scene.addGraphic(fovOverlayImage, RenderLayers.FOV);
-        //        fovOverlayEntity.visible = false;
+        fovOverlayEntity.visible = false;
 
         fovOverlayDirty = true;
 
-        memoryCanvas = new Canvas(map.width * assetFactory.tileSize, map.height * assetFactory.tileSize);
-        scene.addGraphic(memoryCanvas, RenderLayers.MEMORY);
+       // memoryCanvas = new Canvas(map.width * assetFactory.tileSize, map.height * assetFactory.tileSize);
+       // scene.addGraphic(memoryCanvas, RenderLayers.MEMORY);
 
         playerInventory = new PlayerInventory(engine.getNodeList(PlayerInventoryNode).head.inventory);
-        scene.add(playerInventory);
+       // scene.add(playerInventory);
 
-        timeDisplay = new Label();
-        timeDisplay.followCamera = true;
+        timeDisplay = new com.haxepunk.gui.Label();
+		timeDisplay.followCamera = HXP.camera;
         timeDisplay.size = 16;
         timeDisplay.localX = HXP.width / 2;
         timeDisplay.color = 0xFFFFFF;
-        scene.add(timeDisplay);
+        //scene.add(timeDisplay);
         timeNodes = engine.getNodeList(TimeTickerNode);
     }
 
@@ -187,9 +189,9 @@ class RenderSystem extends System
                     var rect:Rectangle = new Rectangle(x * assetFactory.tileSize, y * assetFactory.tileSize, assetFactory.tileSize, assetFactory.tileSize);
 
                     // if it became visible - clear memory tile
-                    if (!wasVisible)
-                        memoryCanvas.fill(rect, 0, 0);
-
+                    if (!wasVisible) {
+                       // memoryCanvas.fill(rect, 0, 0);
+					}
                     // for every renderable entity in this tile
                     for (e in map.get(x, y).entities)
                     {
@@ -206,14 +208,15 @@ class RenderSystem extends System
                             sceneEntity.hide();
 
                         // if tile has just been hidden, draw memorable sprites to memory
-                        if (wasVisible && renderable.memorable)
-                            memoryCanvas.drawGraphic(Std.int(rect.x), Std.int(rect.y), sceneEntity.graphic);
+                        if (wasVisible && renderable.memorable) {
+                          //  memoryCanvas.drawGraphic(Std.int(rect.x), Std.int(rect.y), sceneEntity.graphic);
+						}
                     }
                 }
             }
         }
         fovOverlayData.unlock();
-        fovOverlayImage.updateBuffer();
+        fovOverlayImage.update();  // updateBuffer()
         fovOverlayDirty = false;
     }
 
@@ -228,9 +231,10 @@ class RenderSystem extends System
 
         // TODO: hackity hack. refactor this to the health manager
         var health:Health = node.entity.get(Health);
-        if (health != null)
-            entity.addGraphic(new HealthBar(assetFactory.tileSize, health));
+        if (health != null) {
+           // entity.addGraphic(new HealthBar(assetFactory.tileSize, health));  // healthbar out
 
+		}
         entity.x = node.position.x * assetFactory.tileSize;
         entity.y = node.position.y * assetFactory.tileSize;
     }
@@ -304,13 +308,13 @@ class RenderSystem extends System
         var tilemapWidth:Int = dungeon.width * assetFactory.tileSize;
         var tilemapHeight:Int = dungeon.height * assetFactory.tileSize;
         var bmp:BitmapData = assetFactory.getImage("eight2empire/level assets.png");
+		var bmpAtlas:TileAtlas = new TileAtlas( new AtlasData(new Texture(bmp)) );
+        var tilesetCols:Int = Math.floor(bmpAtlas.width / assetFactory.tileSize); // bmp.width?
+        var floorTilemap:Tilemap = new Tilemap(bmpAtlas, tilemapWidth, tilemapHeight, assetFactory.tileSize, assetFactory.tileSize);
+        var wallTilemap:Tilemap = new Tilemap(bmpAtlas, tilemapWidth, tilemapHeight, assetFactory.tileSize, assetFactory.tileSize);
 
-        var tilesetCols:Int = Math.floor(bmp.width / assetFactory.tileSize);
-        var floorTilemap:Tilemap = new Tilemap(bmp, tilemapWidth, tilemapHeight, assetFactory.tileSize, assetFactory.tileSize);
-        var wallTilemap:Tilemap = new Tilemap(bmp, tilemapWidth, tilemapHeight, assetFactory.tileSize, assetFactory.tileSize);
-
-        var wallRow:Int = 2 + HXP.rand(5) * 2;
-        var floorCol:Int = HXP.rand(15);
+        var wallRow:Int = 2 + haxepunk.math.Random.randInt(5) * 2;
+        var floorCol:Int = haxepunk.math.Random.randInt(15);
         var floorRow:Int = 0;
         var floorTileIndex:Int = tilesetCols * floorRow + floorCol;
 
@@ -340,15 +344,15 @@ class RenderSystem extends System
 
 class RenderLayers
 {
-    public static inline var DUNGEON:Int = HXP.BASELAYER;
-    public static inline var MEMORY:Int = HXP.BASELAYER - 1;
-    public static inline var OBJECT:Int = HXP.BASELAYER - 2;
-    public static inline var CHARACTER:Int = HXP.BASELAYER - 3;
-    public static inline var FOV:Int = HXP.BASELAYER - 4;
-    public static inline var UI:Int = HXP.BASELAYER - 5;
+    public static inline var DUNGEON:Int = 0;
+    public static inline var MEMORY:Int = 0 - 1;
+    public static inline var OBJECT:Int = 0- 2;
+    public static inline var CHARACTER:Int = 0 - 3;
+    public static inline var FOV:Int = 0 - 4;
+    public static inline var UI:Int = 0 - 5;
 }
 
-private class RenderableEntity extends com.haxepunk.Entity
+private class RenderableEntity extends haxepunk.Entity
 {
     private var renderable:Renderable;
     private var assetFactory:AssetFactory;
@@ -359,13 +363,15 @@ private class RenderableEntity extends com.haxepunk.Entity
     {
         super();
         graphic = new Graphiclist();
+
         layer = renderable.layer;
         this.renderable = renderable;
         this.assetFactory = assetFactory;
 
         if (!renderable.memorable)
         {
-            alphaTween = new NumTween(onAlphaTweenComplete);
+            alphaTween = new NumTween(); //onAlphaTweenComplete
+			alphaTween.onComplete.bind(onAlphaTweenComplete);
             alphaTween.value = 0;
             addTween(alphaTween);
         }
@@ -386,7 +392,7 @@ private class RenderableEntity extends com.haxepunk.Entity
             visible = false;
     }
 
-    private function onAlphaTweenComplete(e):Void
+    private function onAlphaTweenComplete():Void
     {
         if (alphaTween.value == 0)
             visible = false;
@@ -408,7 +414,7 @@ private class RenderableEntity extends com.haxepunk.Entity
         if (renderable.assetInvalid)
         {
             var gList:Graphiclist = cast graphic;
-
+		
             if (mainGraphic != null)
                 gList.remove(mainGraphic);
 
@@ -420,7 +426,7 @@ private class RenderableEntity extends com.haxepunk.Entity
     }
 }
 
-private class FloatingText extends com.haxepunk.Entity
+private class FloatingText extends haxepunk.Entity
 {
     private var tween:LinearMotion;
 
@@ -438,20 +444,22 @@ private class FloatingText extends com.haxepunk.Entity
 
         var origX:Int = posX * tileSize + Std.int(tileSize * 0.5 - textGraphic.width * 0.5);
         var origY:Int = posY * tileSize - textGraphic.height;
-        var targetX:Int = origX + ((HXP.random < 0.5) ? -1 : 1) * Std.int(tileSize * HXP.random * 0.5);
-        var targetY:Int = origY - Std.int(tileSize * (0.5 + HXP.random * 0.5));
+        var targetX:Int = origX + ((haxepunk.math.Random.random < 0.5) ? -1 : 1) * Std.int(tileSize * haxepunk.math.Random.random * 0.5);
+        var targetY:Int = origY - Std.int(tileSize * (0.5 + haxepunk.math.Random.random * 0.5));
 
         x = origX;
         y = origY;
 
         tween.setMotion(origX, origY, targetX, targetY, 0.5);
-        tween.addEventListener(TweenEvent.FINISH, onTweenComplete);
+       // tween.addEventListener(TweenEvent.FINISH, onTweenComplete);
+	   tween.onComplete.bind(onTweenComplete);
         addTween(tween);
     }
 
-    private function onTweenComplete(event:TweenEvent):Void
+    private function onTweenComplete():Void
     {
-        tween.removeEventListener(TweenEvent.FINISH, onTweenComplete);
+		tween.onComplete.remove(onTweenComplete);
+       // tween.removeEventListener(TweenEvent.FINISH, onTweenComplete);
         removeTween(tween);
         scene.recycle(this);
     }
@@ -466,7 +474,7 @@ private class FloatingText extends com.haxepunk.Entity
     }
 }
 
-private class SlashAnimation extends com.haxepunk.Entity
+private class SlashAnimation extends haxepunk.Entity
 {
     private var tween:NumTween;
     private var scheduler:Scheduler;
@@ -484,7 +492,7 @@ private class SlashAnimation extends com.haxepunk.Entity
         if (image == null)
             graphic = image = cast assetFactory.createTileImage("slash");
 
-        var flip:Bool = HXP.random < 0.5;
+        var flip:Bool = Random.random < 0.5;
 
         image.scaleX = flip ? -1 : 1;
         x = posX * assetFactory.tileSize;
@@ -496,15 +504,17 @@ private class SlashAnimation extends com.haxepunk.Entity
         scheduler.lock();
 
         tween.tween(1, 0, 0.25);
-        tween.addEventListener(TweenEvent.FINISH, onTweenComplete);
+		tween.onComplete.bind(onTweenComplete);
+       // tween.addEventListener(TweenEvent.FINISH, onTweenComplete);
         addTween(tween);
     }
 
-    private function onTweenComplete(event:TweenEvent):Void
+    private function onTweenComplete():Void
     {
         scheduler.unlock();
         scheduler = null;
-        tween.removeEventListener(TweenEvent.FINISH, onTweenComplete);
+		tween.onComplete.remove(onTweenComplete);
+       // tween.removeEventListener(TweenEvent.FINISH, onTweenComplete);
         removeTween(tween);
         scene.recycle(this);
     }
@@ -516,7 +526,7 @@ private class SlashAnimation extends com.haxepunk.Entity
     }
 }
 
-private class HealthBar extends Canvas
+private class HealthBar //extends Canvas  // This is no longer working because Canvas is removed in 4.x
 {
     private static inline var WIDTH_PERCENT:Float = 1.2;
     private static inline var HEIGHT:Int = 2;
@@ -534,15 +544,15 @@ private class HealthBar extends Canvas
     public function new(parentWidth:Int, health:Health)
     {
         var width:Int = Std.int(parentWidth * WIDTH_PERCENT) + BORDER * 2;
-        super(width, HEIGHT + BORDER * 2);
-        x = -(width - parentWidth) / 2;
-        y = -(height + MARGIN);
-        alpha = ALPHA;
+       // super(width, HEIGHT + BORDER * 2);
+       // x = -(width - parentWidth) / 2;
+       // y = -(height + MARGIN);
+        //alpha = ALPHA;
 
         this.health = health;
         this.health.updated.add(onHealthUpdate);
 
-        active = true;
+        //active = true;
         tween = new NumTween();
         tween.value = health.currentHP / health.maxHP;
         HXP.scene.addTween(tween);
@@ -564,32 +574,34 @@ private class HealthBar extends Canvas
         if (BORDER > 0)
         {
             rect.x = rect.y = 0;
-            rect.width = width;
-            rect.height = height;
-            fill(rect, BORDER_COLOR);
+            //rect.width = width;
+            //rect.height = height;
+            //fill(rect, BORDER_COLOR);
         }
 
         // fill health bar
-        var w:Int = Std.int((width - BORDER * 2) * percent);
+       // var w:Int = Std.int((width - BORDER * 2) * percent);
         rect.x = rect.y = BORDER;
         rect.height = HEIGHT;
-        rect.width = w;
-        fill(rect, FILL_COLOR);
+        //rect.width = w;
+       // fill(rect, FILL_COLOR);
 
         // draw empty bar part (if health is not full)
         if (percent < 1)
         {
-            rect.x += rect.width;
-            rect.width = Math.ceil((width - BORDER * 2) * (1 - percent));
-            fill(rect, EMPTY_COLOR);
+           // rect.x += rect.width;
+         //   rect.width = Math.ceil((width - BORDER * 2) * (1 - percent));
+           // fill(rect, EMPTY_COLOR);
         }
     }
 
+	/*
     override public function update():Void
     {
         if (tween.active)
             redraw();
     }
+	*/
 
     public function dispose():Void
     {
@@ -600,7 +612,7 @@ private class HealthBar extends Canvas
     }
 }
 
-private class PlayerInventory extends Panel
+class PlayerInventory extends com.haxepunk.gui.Panel
 {
     private static inline var PADDING:Int = 4;
 
@@ -611,9 +623,9 @@ private class PlayerInventory extends Panel
     public function new(inventory:Inventory)
     {
         super();
-        followCamera = true;
+        followCamera = HXP.camera;
 
-        title = new Label("Inventory", PADDING, PADDING);
+        title = new com.haxepunk.gui.Label("Inventory", PADDING, PADDING);
         title.color = 0x0000FF;
         addControl(title);
 

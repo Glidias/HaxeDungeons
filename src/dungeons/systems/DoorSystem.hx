@@ -1,6 +1,6 @@
 package dungeons.systems;
 
-import com.haxepunk.Graphic;
+import haxepunk.Graphic;
 
 import ash.core.Engine;
 import ash.core.Entity;

@@ -2,8 +2,8 @@ package dungeons;
 
 import Lambda;
 
-import com.haxepunk.HXP;
-import com.haxepunk.Scene;
+import haxepunk.HXP;
+import haxepunk.Scene;
 
 import openfl.Assets;
 import flash.text.TextFormat;
@@ -189,28 +189,28 @@ class GameScene extends Scene
         {
             var randomPoint:Vector;
 
-            if (room != startRoom && HXP.random < 0.3)
+            if (room != startRoom && haxepunk.math.Random.random < 0.3)
             {
                 randomPoint = getRandomRoomPoint(room);
                 var monster:Entity = entityCreator.createMonster();
                 monster.get(Position).moveTo(randomPoint.x, randomPoint.y);
             }
 
-            if (HXP.random < 0.3)
+            if (haxepunk.math.Random.random < 0.3)
             {
                 randomPoint = getRandomRoomPoint(room);
-                var gold:Entity = entityCreator.createGold(1 + HXP.rand(30));
+                var gold:Entity = entityCreator.createGold(1 + haxepunk.math.Random.randInt(30));
                 gold.get(Position).moveTo(randomPoint.x, randomPoint.y);
             }
 
-            if (HXP.random < 0.3)
+            if (haxepunk.math.Random.random < 0.3)
             {
                 randomPoint = getRandomRoomPoint(room);
                 var weapon:Entity = entityCreator.createWeapon();
                 weapon.get(Position).moveTo(randomPoint.x, randomPoint.y);
             }
 
-            if (HXP.random < 0.3)
+            if (haxepunk.math.Random.random < 0.3)
             {
                 randomPoint = getRandomRoomPoint(room);
                 var remains:Entity = entityCreator.createRemains();
@@ -224,7 +224,7 @@ class GameScene extends Scene
                     var y:Int = room.y + 1;
                     for (x in room.x + 1...room.x + room.grid.width - 1)
                     {
-                        if (HXP.random < 0.1)
+                        if (haxepunk.math.Random.random < 0.1)
                             continue;
 
                         if (x == room.x + 1 && dungeon.grid.get(x - 1, y).tile != Tile.Wall)
@@ -239,8 +239,8 @@ class GameScene extends Scene
                         var shelf:Entity = new Entity();
                         shelf.add(new Position(x, y));
                         shelf.add(obstacle);
-                        var type:String = HXP.random < 0.5 ? "bookshelf_ransacked" : "bookshelf";
-                        var variant:Int = HXP.rand(3);
+                        var type:String = haxepunk.math.Random.random < 0.5 ? "bookshelf_ransacked" : "bookshelf";
+                        var variant:Int = haxepunk.math.Random.randInt(3);
                         shelf.add(new Renderable(type + variant, RenderLayers.OBJECT));
                         engine.addEntity(shelf);
                     }
@@ -305,8 +305,8 @@ class GameScene extends Scene
     private static function getRandomRoomPoint(room:Room):Vector
     {
         return {
-        x: room.x + 1 + HXP.rand(room.grid.width - 2),
-        y: room.y + 1 + HXP.rand(room.grid.height - 2)
+        x: room.x + 1 + haxepunk.math.Random.randInt(room.grid.width - 2),
+        y: room.y + 1 + haxepunk.math.Random.randInt(room.grid.height - 2)
         };
     }
 

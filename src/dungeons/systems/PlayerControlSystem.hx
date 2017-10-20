@@ -1,7 +1,7 @@
 package dungeons.systems;
 
-import com.haxepunk.utils.Key;
-import com.haxepunk.utils.Input;
+import haxepunk.input.Key;
+import haxepunk.input.Input;
 
 import ash.core.Entity;
 import ash.core.Engine;
@@ -170,11 +170,11 @@ class MainInputState extends BaseInputState
 {
     override public function getAction(system:PlayerControlSystem, entity:Entity):Action
     {
-        if (!Input.pressed(Key.ANY))
+        if (!Key.pressed(Key.ANY))
             return null;
 
         var action:Action = null;
-        var key:Int = Input.lastKey;
+        var key:Int = Key.lastKey;
         var moveDir:Direction = KeyUtil.keyToDirection(key);
         if (moveDir != null)
         {
@@ -235,10 +235,10 @@ class ChooseDirectionState extends BaseInputState
 
     override public function getAction(system:PlayerControlSystem, entity:Entity):Action
     {
-        if (!Input.pressed(Key.ANY))
+        if (!Key.pressed(Key.ANY))
             return null;
 
-        var key:Int = Input.lastKey;
+        var key:Int = Key.lastKey;
 
         if (key == Key.ESCAPE)
         {

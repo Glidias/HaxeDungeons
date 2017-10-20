@@ -1,6 +1,6 @@
 package dungeons.mapgen;
 
-import com.haxepunk.HXP;
+import haxepunk.HXP;
 
 import dungeons.mapgen.Dungeon.Tile;
 import dungeons.mapgen.IRoomFactory.RoomCellInfo;
@@ -21,8 +21,8 @@ class RectRoomFactory implements IRoomFactory
 
     public function generateRoomGrid():Grid<RoomCellInfo>
     {
-        var w:Int = minRoomSize.x + HXP.rand(maxRoomSize.x - minRoomSize.x + 1);
-        var h:Int = minRoomSize.y + HXP.rand(maxRoomSize.y - minRoomSize.y + 1);
+        var w:Int = minRoomSize.x + haxepunk.math.Random.randInt(maxRoomSize.x - minRoomSize.x + 1);
+        var h:Int = minRoomSize.y + haxepunk.math.Random.randInt(maxRoomSize.y - minRoomSize.y + 1);
 
         var roomGrid:Grid<RoomCellInfo> = new Grid(w, h);
         for (y in 0...h)

@@ -1,16 +1,19 @@
 package dungeons;
 
-import com.haxepunk.graphics.Spritemap;
-import com.haxepunk.Graphic;
+import haxepunk.graphics.atlas.TileAtlas;
+import haxepunk.graphics.Spritemap;
+import haxepunk.Graphic;
 import haxe.Json;
+import haxepunk.graphics.atlas.AtlasDataType;
+import haxepunk.graphics.hardware.Texture;
 
 import flash.geom.Rectangle;
 import flash.geom.Matrix;
 import flash.display.BitmapData;
 import openfl.Assets;
 
-import com.haxepunk.HXP;
-import com.haxepunk.graphics.Image;
+import haxepunk.HXP;
+import haxepunk.graphics.Image;
 
 class AssetFactory
 {
@@ -58,7 +61,9 @@ class AssetFactory
 
         if (frames.length > 1)
         {
-            var spritemap:Spritemap = new Spritemap(bmp, tileSize, tileSize);
+			var tx = new Texture(bmp);
+			var ta:TileAtlas = new TileAtlas(tx);
+            var spritemap:Spritemap = new Spritemap(tx, tileSize, tileSize);
             var cols:Int = Std.int(bmp.width / tileSize);
             var animFrames = [for (frame in frames) frame.row * cols + frame.col];
             spritemap.add("", animFrames, 1);
@@ -69,7 +74,9 @@ class AssetFactory
         {
             tileRect.x = frames[0].col * tileSize;
             tileRect.y = frames[0].row * tileSize;
-            return new Image(bmp, tileRect.clone());
+			var t:ImageType = new Texture(bmp);
+			
+            return new Image(t, tileRect.clone());
         }
     }
 

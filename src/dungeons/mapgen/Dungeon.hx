@@ -1,6 +1,6 @@
 package dungeons.mapgen;
 
-import com.haxepunk.HXP;
+import haxepunk.HXP;
 
 import dungeons.mapgen.IRoomFactory.RoomCellInfo;
 import dungeons.utils.Vector;
@@ -152,17 +152,17 @@ class Dungeon
             switch (connection.direction)
             {
                 case North:
-                    x = connection.x - 1 - HXP.rand(room.grid.width - 2);
+                    x = connection.x - 1 - haxepunk.math.Random.randInt(room.grid.width - 2);
                     y = connection.y - room.grid.height;
                 case South:
-                    x = connection.x - 1 - HXP.rand(room.grid.width - 2);
+                    x = connection.x - 1 - haxepunk.math.Random.randInt(room.grid.width - 2);
                     y = connection.y + 1;
                 case West:
                     x = connection.x - room.grid.width;
-                    y = connection.y - 1 - HXP.rand(room.grid.height - 2);
+                    y = connection.y - 1 - haxepunk.math.Random.randInt(room.grid.height - 2);
                 case East:
                     x = connection.x + 1;
-                    y = connection.y - 1 - HXP.rand(room.grid.height - 2);
+                    y = connection.y - 1 - haxepunk.math.Random.randInt(room.grid.height - 2);
                 default:
             }
 
@@ -342,7 +342,7 @@ class Dungeon
     private function applyIntensity(room:Room, intensity:Float):Float
     {
         var INTENSITY_GROWTH_JITTER:Float = 0.1;
-        intensity *= 1.0 - INTENSITY_GROWTH_JITTER/2.0 + INTENSITY_GROWTH_JITTER * HXP.random;
+        intensity *= 1.0 - INTENSITY_GROWTH_JITTER/2.0 + INTENSITY_GROWTH_JITTER * haxepunk.math.Random.random;
 
         room.intensity = intensity;
 
@@ -461,13 +461,13 @@ class Dungeon
     {
         var pos:Vector = getConnectionNextPos(connection);
 
-        var outerDoor:Bool = HXP.random < 0.5;
+        var outerDoor:Bool = haxepunk.math.Random.random < 0.5;
 
         var doorTile:Tile = Floor;
         if (lockLevel > 0)
             doorTile = Door(false, lockLevel);
-        else if (HXP.random < doorChance)
-            doorTile = Door(HXP.random < openDoorChance, 0);
+        else if (haxepunk.math.Random.random < doorChance)
+            doorTile = Door(haxepunk.math.Random.random < openDoorChance, 0);
 
         grid.get(connection.x, connection.y).tile = outerDoor ? Floor : doorTile;
         grid.get(pos.x, pos.y).tile = outerDoor ? doorTile : Floor;

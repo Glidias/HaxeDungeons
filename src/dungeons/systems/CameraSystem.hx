@@ -1,7 +1,7 @@
 package dungeons.systems;
 
-import com.haxepunk.HXP;
-import com.haxepunk.tweens.motion.LinearMotion;
+import haxepunk.HXP;
+import haxepunk.tweens.motion.LinearMotion;
 
 import ash.core.Engine;
 import ash.tools.ListIteratingSystem;

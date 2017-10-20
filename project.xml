@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
-    <app file="Dungeons" main="dungeons.Main"/>
+    
     <window width="1024" height="768" background="#000000"/>
 
     <source path="src"/>
-
+	
+	<app file="Dungeons" main="dungeons.Main"/>
     <haxelib name="openfl"/>
-    <haxelib name="HaxePunk"/>
+    <haxelib name="HaxePunk" version="git" />
     <haxelib name="HaxePunk-gui"/>
     <haxelib name="ash"/>
 
